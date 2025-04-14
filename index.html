@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Signature Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(to bottom right, rgba(240, 240, 240, 0.8), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(30px);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            margin-bottom: 100px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-header {
+            max-width: 180px;
+            height: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .logo-header:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .nav-button {
+            background: linear-gradient(to right, #ff7b00, #f8a546);
+            color: #ffffff;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .nav-button:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #1d1d1f;
+            font-weight: 600;
+            font-size: 28px;
+            text-align: center;
+            margin: 40px 0 20px;
+            text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            backdrop-filter: blur(30px);
+            margin: 0 20px;
+        }
+        h2 {
+            color: #1d1d1f;
+            font-weight: 500;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        form {
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .phone-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .phone-group .phone-input {
+            flex: 2;
+        }
+        .phone-group .ext-input {
+            flex: 1;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="file"],
+        input[type="number"],
+        select {
+            width: 100%;
+            margin: 12px 0;
+            padding: 14px;
+            border: 2px solid rgba(220, 220, 220, 0.6);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #1d1d1f;
+        }
+        input:focus,
+        select:focus {
+            border-color: #ff7b00;
+            outline: none;
+        }
+        input::placeholder {
+            color: #888;
+        }
+        input[type="file"] {
+            padding: 12px;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%231d1d1f" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+        .button {
+            background: linear-gradient(to right, #ff7b00, #f8a546);
+            color: #ffffff;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin: 15px auto;
+        }
+        .button:hover {
+            background: linear-gradient(to right, #ff7b00, #f8a546);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .add-btn, .remove-btn {
+            padding: 10px 16px;
+            font-size: 14px;
+            margin: 10px 5px 0 0;
+            display: inline-block;
+        }
+        .remove-btn {
+            background: linear-gradient(to right, #ff6200, #ff9500);
+        }
+        #signaturePreview {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            backdrop-filter: blur(30px);
+            min-height: 100px;
+        }
+        .signature {
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .signature img.profile-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .signature img.company-logo {
+            max-width: 100px;
+            max-height: 40px;
+            object-fit: contain;
+            margin-top: 10px;
+        }
+        .signature .text-content {
+            flex: 1;
+        }
+        .signature b {
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+        .signature a {
+            color: #007aff;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .signature a:hover {
+            color: #0056b3;
+        }
+        .note {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+            text-align: center;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+            .container {
+                padding: 20px;
+                margin: 0 15px;
+            }
+            input, select {
+                padding: 12px;
+                font-size: 14px;
+            }
+            .button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+            .phone-group {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .phone-group .phone-input,
+            .phone-group .ext-input {
+                flex: none;
+            }
+            .signature {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .signature img.profile-photo {
+                margin-bottom: 10px;
+            }
+            .header-left {
+                gap: 8px;
+            }
+            .nav-button {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="https://raw.githubusercontent.com/Hoodhost/QRGen/refs/heads/main/Hood%20horizontal%20Logo.png" alt="Logo" class="logo-header" onclick="refreshPage()">
+            <a href="https://hoodhost.github.io/QRGen/" class="nav-button">QR Creator</a>
+        </div>
+    </header>
+    <h1>Email Signature Generator</h1>
+    <div class="container">
+        <form id="signatureForm">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" name="jobTitle" placeholder="Software Engineer" required>
+            </div>
+            <div class="form-group">
+                <label for="company">Company</label>
+                <select id="company" name="company">
+                    <option value="">Select a company (optional)</option>
+                    <option value="Hood Industries">Hood Industries</option>
+                    <option value="Hood Distribution">Hood Distribution</option>
+                    <option value="Hood Companies">Hood Companies</option>
+                    <option value="Hood DSI">Hood DSI</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="profilePhoto">Profile Photo (Optional)</label>
+                <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*">
+                <p class="note">Recommended: 50x50px, square image.</p>
+            </div>
+            <div class="form-group" id="emailFields">
+                <label for="email1">Email</label>
+                <input type="email" id="email1" name="email[]" placeholder="john.doe@example.com" required>
+            </div>
+            <button type="button" class="button add-btn" onclick="addEmailField()">Add Another Email</button>
+            <div class="form-group" id="phoneFields">
+                <label for="phone1">Phone</label>
+                <div class="phone-group">
+                    <div class="phone-input">
+                        <input type="tel" id="phone1" name="phone[]" placeholder="123-456-7890">
+                    </div>
+                    <div class="ext-input">
+                        <input type="number" id="ext1" name="ext[]" placeholder="Ext.">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="button add-btn" onclick="addPhoneField()">Add Another Phone</button>
+            <div class="form-group">
+                <label for="companyLogo">Company Logo (Optional)</label>
+                <select id="companyLogo" name="companyLogo">
+                    <option value="">None</option>
+                    <option value="hood-industries">Hood Industries</option>
+                    <option value="hood-distribution">Hood Distribution</option>
+                </select>
+            </div>
+            <button type="submit" class="button">Generate Signature</button>
+        </form>
+    </div>
+
+    <h2>Preview</h2>
+    <div class="container" id="signaturePreview">
+        <p>Your email signature will appear here...</p>
+    </div>
+    <p class="note">Note: Images are embedded as Data URLs for preview. For email clients, host images online and replace the src with URLs.</p>
+
+    <script>
+        function refreshPage() {
+            window.location.reload();
+        }
+
+        let emailCount = 1;
+        let phoneCount = 1;
+
+        // Placeholder logo URLs (replace with actual hosted URLs)
+        const logoMap = {
+            'hood-industries': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==',
+            'hood-distribution': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABCrK84wAAAABJRU5ErkJggg=='
+        };
+
+        // Format phone number to XXX-XXX-XXXX
+        function formatPhoneNumber(value) {
+            const digits = value.replace(/\D/g, '');
+            if (digits.length >= 10) {
+                return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+            }
+            return digits;
+        }
+
+        // Apply phone number formatting on input
+        function attachPhoneFormatListeners() {
+            document.querySelectorAll('input[name="phone[]"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    const formatted = formatPhoneNumber(this.value);
+                    if (formatted !== this.value) {
+                        this.value = formatted;
+                    }
+                });
+            });
+        }
+
+        // Initial listeners for existing phone fields
+        attachPhoneFormatListeners();
+
+        function addEmailField() {
+            emailCount++;
+            const emailFields = document.getElementById('emailFields');
+            const newField = document.createElement('div');
+            newField.className = 'form-group';
+            newField.innerHTML = `
+                <label for="email${emailCount}">Email ${emailCount}</label>
+                <input type="email" id="email${emailCount}" name="email[]" placeholder="another.email@example.com">
+                <button type="button" class="button remove-btn" onclick="removeField(this)">Remove</button>
+            `;
+            emailFields.appendChild(newField);
+        }
+
+        function addPhoneField() {
+            phoneCount++;
+            const phoneFields = document.getElementById('phoneFields');
+            const newField = document.createElement('div');
+            newField.className = 'form-group';
+            newField.innerHTML = `
+                <label for="phone${phoneCount}">Phone ${phoneCount}</label>
+                <div class="phone-group">
+                    <div class="phone-input">
+                        <input type="tel" id="phone${phoneCount}" name="phone[]" placeholder="123-456-7890">
+                    </div>
+                    <div class="ext-input">
+                        <input type="number" id="ext${phoneCount}" name="ext[]" placeholder="Ext.">
+                    </div>
+                </div>
+                <button type="button" class="button remove-btn" onclick="removeField(this)">Remove</button>
+            `;
+            phoneFields.appendChild(newField);
+            attachPhoneFormatListeners();
+        }
+
+        function removeField(button) {
+            button.parentElement.remove();
+            attachPhoneFormatListeners();
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) resolve(null);
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        document.getElementById('signatureForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const jobTitle = document.getElementById('jobTitle').value.trim();
+            const company = document.getElementById('company').value.trim();
+            const emails = Array.from(document.querySelectorAll('input[name="email[]"]'))
+                .map(input => input.value.trim())
+                .filter(value => value);
+            const phones = Array.from(document.querySelectorAll('input[name="phone[]"]'))
+                .map(input => {
+                    const value = input.value.trim();
+                    return value ? formatPhoneNumber(value) : '';
+                })
+                .filter(value => value);
+            const extensions = Array.from(document.querySelectorAll('input[name="ext[]"]'))
+                .map(input => input.value.trim())
+                .filter(value => value);
+            const profilePhotoFile = document.getElementById('profilePhoto').files[0];
+            const companyLogo = document.getElementById('companyLogo').value;
+
+            // Validate required fields
+            if (!fullName || !jobTitle || !emails.length) {
+                alert('Please fill in all required fields (Full Name, Job Title, at least one Email).');
+                return;
+            }
+
+            // Read profile photo as Data URL
+            const profilePhotoURL = await readFileAsDataURL(profilePhotoFile);
+
+            // Generate signature HTML
+            let signatureHTML = `
+                <div class="signature">
+            `;
+
+            // Add profile photo if uploaded
+            if (profilePhotoURL) {
+                signatureHTML += `<img src="${profilePhotoURL}" class="profile-photo" alt="Profile Photo">`;
+            }
+
+            // Text content
+            signatureHTML += `
+                <div class="text-content">
+                    <b>${fullName}</b><br>
+                    ${jobTitle}${company ? `, ${company}` : ''}<br>
+            `;
+
+            // Add emails
+            emails.forEach((email, index) => {
+                signatureHTML += `<a href="mailto:${email}">${email}</a>`;
+                if (index < emails.length - 1) signatureHTML += '<br>';
+            });
+
+            // Add phones with extensions
+            if (phones.length) {
+                signatureHTML += '<br>';
+                phones.forEach((phone, index) => {
+                    const ext = extensions[index] || '';
+                    const displayText = ext ? `${phone} Ext. ${ext}` : phone;
+                    signatureHTML += `<a href="tel:${phone}${ext ? `,${ext}` : ''}">${displayText}</a>`;
+                    if (index < phones.length - 1) signatureHTML += '<br>';
+                });
+            }
+
+            signatureHTML += `</div>`;
+
+            // Add company logo if selected
+            if (companyLogo && logoMap[companyLogo]) {
+                signatureHTML += `<img src="${logoMap[companyLogo]}" class="company-logo" alt="Company Logo">`;
+            }
+
+            signatureHTML += `</div>`;
+
+            // Update preview
+            const preview = document.getElementById('signaturePreview');
+            preview.innerHTML = signatureHTML;
+
+            // Copy to clipboard on generate
+            const range = document.createRange();
+            range.selectNode(preview);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            try {
+                document.execCommand('copy');
+                alert('Signature generated and copied to clipboard! Note: For email clients, host images online and replace Data URLs with image URLs.');
+            } catch (err) {
+                console.error('Failed to copy signature:', err);
+                alert('Signature generated, but failed to copy to clipboard. Please select and copy manually.');
+            }
+            window.getSelection().removeAllRanges();
+        });
+    </script>
+</body>
+</html>
